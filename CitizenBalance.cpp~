@@ -12,16 +12,49 @@ CitizenBalance::CitizenBalance(std::string tty){
 		return;
 	}
 
-	if(!isatty(fd)){
-		cerr << "error " << tty << " is not a terminal" << endl;
-	}
-		
-	delay_ms = 0;
-	ibaud = 0;
 	set_interface_attribs (fd, B9600, 0);
 	set_blocking (fd, 1);
 	
 
+}
+string CitizenBalance::readline(){
+	string s = "";
+	
+	cout << "Trying to read in line" << endl;
+	//cout << "delay_ms " << delay_ms << endl;
+	
+	char c;
+
+	bool cont = true;
+	while(cont){
+		//cout << "Here" << endl; 
+
+		if(read (fd, &c, 1) < 1){
+			cerr << "read error" << endl;
+		}
+		
+		cout << c;
+
+
+		if(c == '\r'){
+			if(read (fd, &c, 1) < 1){
+				cerr << "read error" << endl;
+			}
+
+			if(c == '\n'){
+				cont = false;
+			}	
+			
+		}else{
+			s += c;
+
+		}
+		
+	}
+	
+	
+	
+	return s;	
 }
 
 double CitizenBalance::get_mass(){
@@ -36,26 +69,21 @@ double CitizenBalance::get_mass(){
 	return val;
 }
 
-unsigned int CitizenBalance::div_round_up(unsigned int n, unsigned int d){
-	return (n + (d/2))/d;
-}
-
-string CitizenBalance::readline(){
-	string s = "";
-	
-	
-	
-	return s;	
+int CitizenBalance::testcommand(){
+	cout << write (fd, "[]", 1) << endl;          	
+	usleep ((26 + 5) * 10000);
+		                   
+	std::string s = readline();
 }
 
 std::string CitizenBalance::get_mass_string(){
-	write (fd, "[W]", 3);          	
+	cout << write (fd, "[W]", 3) << endl;          	
 	usleep ((26 + 3) * 10000);
 		                   
+	std::string s = readline();
+	//int n = read (fd, in_buff, 26);
 	
-	int n = read (fd, in_buff, 26);
-	
-	return std::string(in_buff, 24);
+	return s; //std::string(in_buff, 24);
 }
 
 
@@ -65,7 +93,7 @@ void CitizenBalance::tare(){
 }
 int CitizenBalance::set_interface_attribs (int fd, int speed, int parity)
 {
-        
+        struct termios tty;
         memset (&tty, 0, sizeof tty);
         if (tcgetattr (fd, &tty) != 0)
         {
@@ -103,22 +131,6 @@ int CitizenBalance::set_interface_attribs (int fd, int speed, int parity)
         return 0;
 }
 
-int set_baud(speed_t s){
-	switch(s){
-		case B9600:
-			ibaud = 9600;
-			break;
-
-		default:
-		return 1;
-	}
-	
-	
-
-	return 0;
-}
-
-
 void CitizenBalance::set_blocking (int fd, int should_block)
 {
         struct termios tty;
@@ -130,7 +142,7 @@ void CitizenBalance::set_blocking (int fd, int should_block)
         }
 
         tty.c_cc[VMIN]  = should_block ? 1 : 0;
-        tty.c_cc[VTIME] = 5;            // 0.5 seconds read timeout
+        tty.c_cc[VTIME] = 0;            // 0.5 seconds read timeout
 
         if (tcsetattr (fd, TCSANOW, &tty) != 0)
                 cerr << "error "<< errno << " from tcsetattr" << endl;

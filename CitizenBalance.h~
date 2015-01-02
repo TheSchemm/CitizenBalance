@@ -9,13 +9,11 @@
 #include <fcntl.h>
 #include <cstdlib>
 #include <sys/stat.h>
-#include <string>
 
-using std::string;
 using std::cout;
 using std::cerr;
 using std::endl;
-
+using std::string;
 class CitizenBalance{
 	int fd;
 
@@ -23,23 +21,9 @@ class CitizenBalance{
 
 	int set_interface_attribs (int fd, int speed, int parity);
 	void set_blocking(int fd, int should_block);
-
-	int delay_ms;
-
-	int ibaud;
-
-	string readline();
-
-	unsigned int div_round_up(unsigned int n, unsigned int d);
-	int set_baud(speed_t s);
-
-
-	struct termios tty;
+	std::string readline();
 public:
 	CitizenBalance(std::string tty);
-	
-	int set_baud(speed_t s);
-
 	double get_mass();
 	void tare();
 	std::string get_mass_string();

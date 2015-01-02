@@ -79,7 +79,12 @@ int main()
 
     cb = new CitizenBalance("/dev/ttyS0");
 
-    cb->get_mass();
+
+    //cout << cb->get_mass_string() << endl;
+
+    cb->testcommand();
+	
+    //cb->get_mass();
 
 
     return 0;
