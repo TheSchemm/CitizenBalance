@@ -1,0 +1,4 @@
+all: CitizenBalance
+
+CitizenBalance: main.cpp CitizenBalance.cpp
+	g++ -o CitizenBalance main.cpp CitizenBalance.cpp -lX11 -I.
