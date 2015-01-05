@@ -7,13 +7,13 @@
 #include <boost/iostreams/filter/zlib.hpp>
 #include <boost/iostreams/filter/regex.hpp>
 #include <boost/iostreams/categories.hpp>
-#include <boost/iostreams/categories.hpp>
 #include <boost/iostreams/operations.hpp>
+#include <boost/iostreams/char_traits.hpp>
 #include <boost/asio.hpp>
 #include <iostream>
 #include <string>
 #include <ctype.h>               
-#include <cstdio.h>
+#include <cstdio>
 
 #include "serial_port_device.hpp"
 using namespace std;
@@ -32,21 +32,19 @@ struct alphabetic_input_filter {
 		bool rm_esc = true;
 
 		while(c == '\e'){
-			while ( (c = boost::iostreams::get(src)) != EOF &&
-				c != WOULD_BLOCK && rm_esc){
+			while (rm_esc){
 				switch(c){
 					case '.':
-						c = boost::iostreams::get(src);
 						rm_esc = false;
 						break;
-					case WOULD_BLOCK:
-						return WOULD_BLOCK;
+					case iostreams::WOULD_BLOCK:
+						return iostreams::WOULD_BLOCK;
 					case EOF:
 						return EOF;
 					default:
 						break;
 				}
-
+				c = boost::iostreams::get(src);
 			}
 		}
 		return c;

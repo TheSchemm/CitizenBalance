@@ -10,6 +10,7 @@ CitizenBalance::CitizenBalance(std::string tty):port(io), port_dev(port){
 	port.set_option(boost::asio::serial_port_base::parity(boost::asio::serial_port_base::parity::none));
 	port.set_option(boost::asio::serial_port_base::flow_control(boost::asio::serial_port_base::flow_control::none)); 
 	//is.push(boost::iostreams::regex_filter{boost::regex{"\e(.*?)\\."}, ""});
+	is.push(alphabetic_input_filter());
 	is.push(port_dev);
 }
 
