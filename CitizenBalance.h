@@ -1,26 +1,22 @@
 #ifndef _CITIZEN_BALANCE_H_
 #define _CITIZEN_BALANCE_H_
-
-#include <errno.h>
-#include <termios.h>
-#include <unistd.h>
-#include <memory.h>
+#include <boost/asio/serial_port.hpp>
+#include <boost/iostreams/device/array.hpp>
+#include <boost/iostreams/device/back_inserter.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <boost/iostreams/filter/zlib.hpp>
+#include <boost/iostreams/filter/regex.hpp>
+#include <boost/asio.hpp> 
 #include <iostream>
-#include <fcntl.h>
-#include <cstdlib>
-#include <sys/stat.h>
+#include <string>
+using namespace std;
+using namespace boost;
 
-using std::cout;
-using std::cerr;
-using std::endl;
-using std::string;
 class CitizenBalance{
-	int fd;
-
-	char in_buff[26];
-
-	int set_interface_attribs (int fd, int speed, int parity);
-	void set_blocking(int fd, int should_block);
+	asio::io_service io;
+	asio::serial_port port;
+	boost::iostreams::filtering_istream is;
+	
 	std::string readline();
 public:
 	CitizenBalance(std::string tty);
