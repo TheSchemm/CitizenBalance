@@ -20,7 +20,7 @@ string CitizenBalance::readline(){
 	char c;
 
 	do{
-		is.read(&c, 1);
+		cout << "is.read: " << is.read(&c, 1) << endl;
 		ret += c;
 		cout << c;
 	}while(c != '\n');	

@@ -30,9 +30,6 @@ public:
 	void tare();
 	std::string get_mass_string();
 	int testcommand();
-	
-	~CitizenBalance();
-
 };
 
 
