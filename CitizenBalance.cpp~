@@ -82,7 +82,7 @@ string CitizenBalance::readline(){
 double CitizenBalance::get_mass(){
 	std::string mass = get_mass_string();
 
-	cout << mass << endl;
+	cout <<"string: " <<  mass << endl;
 
 	double ret = std::stod(mass.substr(5));
 	char sign = mass[4];

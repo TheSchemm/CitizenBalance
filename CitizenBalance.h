@@ -50,7 +50,38 @@ struct alphabetic_input_filter {
 		return c;
 	}
 };
+/*
 
+Taring...
+          Done
+    -         0.0013 g  
+13
+32
+32
+32
+32
+45
+32
+32
+32
+32
+32
+32
+32
+32
+32
+48
+46
+48
+48
+49
+51
+32
+103
+32
+32
+    -         0.0013 g  
+*/
 
 class CitizenBalance{
 	asio::io_service io;

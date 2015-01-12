@@ -59,7 +59,7 @@ class CitizenBalance{
 	boost::iostreams::filtering_istream is;
 	
 	
-	
+	int getch();
 	
 public:
 	std::string readline();

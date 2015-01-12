@@ -41,7 +41,6 @@ int CitizenBalance::getch(){
 string CitizenBalance::readline(){
 	string ret;
 	//cout << "Getting String." << endl;
-	
 		
 	char c;
 	while((c = getch()) != EOF){
@@ -113,6 +112,11 @@ std::string CitizenBalance::get_mass_string(){
 		                   
 	std::string s = readline();
 	cout << "String: " << s << endl;
+
+
+	for(int i = 0; i < s.length(); i++){
+		cout << (int)s[i] << endl;
+	}
 
 	//int n = read (fd, in_buff, 26);
 	
