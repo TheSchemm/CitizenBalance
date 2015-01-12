@@ -37,8 +37,8 @@ struct alphabetic_input_filter {
 					case '.':
 						rm_esc = false;
 						break;
-					case WOULD_BLOCK:
-						return WOULD_BLOCK;
+					case iostreams::WOULD_BLOCK:
+						return iostreams::WOULD_BLOCK;
 					case EOF:
 						return EOF;
 					default:

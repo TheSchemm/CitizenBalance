@@ -77,23 +77,20 @@ void keypress_callback(){
 int main()
 {
 
-    cb = new CitizenBalance("/dev/ttyS0");
+	cb = new CitizenBalance("/dev/ttyS0");
+	cb->tare();
+	cout << cb->get_mass_string() << endl;
+	cout << cb->get_mass() << endl;
+//cout << cb->get_mass_string() << endl;
 
-
-	//cout << cb->readline() << endl;
-
-    cout << cb->get_mass_string() << endl;
-
-cout << cb->get_mass_string() << endl;
-
-cout << cb->get_mass_string() << endl;
+//cout << cb->get_mass_string() << endl;
 
     //cb->testcommand();
 	
     //cb->get_mass();
 
 
-    return 0;
+	return 0;
 }
 
 

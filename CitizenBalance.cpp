@@ -10,22 +10,61 @@ CitizenBalance::CitizenBalance(std::string tty):port(io), port_dev(port){
 	port.set_option(boost::asio::serial_port_base::parity(boost::asio::serial_port_base::parity::none));
 	port.set_option(boost::asio::serial_port_base::flow_control(boost::asio::serial_port_base::flow_control::none)); 
 	//is.push(boost::iostreams::regex_filter{boost::regex{"\e(.*?)\\."}, ""});
-	is.push(alphabetic_input_filter());
+	//is.push(alphabetic_input_filter());
 	is.push(port_dev);
 }
 
 
+int CitizenBalance::getch(){
+	char c;
+	if(read(is, &c, 1) == -1)
+				return -1;
+
+	//cout << "Got " << c << endl;
+
+	while(c == 0x1B){
+		do{
+			if(read(is, &c, 1) == -1)
+				return -1;	
+			
+
+		}while(c != '.');
+		
+		if(read(is, &c, 1) == -1)
+				return -1;
+	}
+
+
+	return c;
+}
+
 string CitizenBalance::readline(){
 	string ret;
-	cout << "Getting String." << endl;
+	//cout << "Getting String." << endl;
+	
+		
 	char c;
+	while((c = getch()) != EOF){
+		
+		//cout << "Here" << endl;
 
-	do{
-		is.read(&c, 1);
-		ret += c;
-		cout << c;
-	}while(c != '\n');	
 
+		
+		//cout << c;
+		
+		if(c == '\n'){
+			if(ret.length() == 1){
+				ret.clear();
+			}else{
+				break;
+			}	
+		}else{
+			ret += c;
+		}
+	
+	}
+
+	//cout << "Here 2" << endl;
 	/*
 	char buff[26];
 
@@ -41,16 +80,24 @@ string CitizenBalance::readline(){
 }
 
 double CitizenBalance::get_mass(){
-	write(port, boost::asio::buffer("[W]", 3));
-	//port.flush();          	
-		                   
+	std::string mass = get_mass_string();
+
+	cout <<"string: " <<  mass << endl;
+
+	double ret = std::stod(mass.substr(5));
+	char sign = mass[4];
+	
+	if(sign == '-'){
+		ret *= -1;
+	}
+	
 	/*
 	int n = read (fd, in_buff, 26);
 	int sign = (in_buff[4] == '-'? -1 : 1);
 	double val = strtod(&in_buff[5], NULL);
 	val *= sign;
 	*/
-	return 0;
+	return ret;
 }
 
 int CitizenBalance::testcommand(){
@@ -62,9 +109,11 @@ int CitizenBalance::testcommand(){
 }
 
 std::string CitizenBalance::get_mass_string(){
-	cout << write(port,boost::asio::buffer("[W]", 3)) << endl;          	
+	write(port,boost::asio::buffer("[W]", 3));         	
 		                   
 	std::string s = readline();
+	cout << "String: " << s << endl;
+
 	//int n = read (fd, in_buff, 26);
 	
 	return s; //std::string(in_buff, 24);
@@ -72,8 +121,8 @@ std::string CitizenBalance::get_mass_string(){
 
 
 void CitizenBalance::tare(){
-	cout << "Taring" << endl;
-	write(port, boost::asio::buffer("[W]", 3));
+	cout << "Taring..." << endl;
+	write(port, boost::asio::buffer("[T]", 3));
 	cout << readline() << endl;
 }
 
